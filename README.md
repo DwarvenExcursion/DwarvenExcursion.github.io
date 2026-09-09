@@ -77,10 +77,13 @@ Then add these. GoDaddy writes the apex as `@`.
 | AAAA | `@` | `2606:50c0:8001::153` | 600 |
 | AAAA | `@` | `2606:50c0:8002::153` | 600 |
 | AAAA | `@` | `2606:50c0:8003::153` | 600 |
-| CNAME | `www` | `dwarvenexcursion.github.io.` | 600 |
+| CNAME | `www` | `dwarvenexcursion.github.io` | 600 |
 
 All four A records are required — they are GitHub's edge servers, not
 alternatives to each other.
+
+Enter the CNAME value with **no trailing dot**; GoDaddy adds it, and
+rejects the form if you type it yourself.
 
 ### 4. Set the domain on GitHub
 
