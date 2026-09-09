@@ -1,5 +1,6 @@
 import { RuneDivider } from "./GoldInlay";
-import { SITE } from "../data/site";
+import SocialIcon from "./SocialIcon";
+import { SITE, SOCIALS } from "../data/site";
 import "./components.css";
 
 export default function Footer() {
@@ -12,10 +13,21 @@ export default function Footer() {
             © {new Date().getFullYear()} {SITE.name} · {SITE.domain}
           </p>
           <nav className="footer__links" aria-label="Footer">
-            <a href={`https://github.com/${SITE.githubUser}`} target="_blank" rel="noreferrer">
-              GitHub
+            {SOCIALS.map((s) => (
+              <a
+                key={s.id}
+                className="footer__social"
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <SocialIcon id={s.id} />
+                {s.label}
+              </a>
+            ))}
+            <a className="footer__social" href={`mailto:${SITE.email}`}>
+              Email
             </a>
-            <a href={`mailto:${SITE.email}`}>Email</a>
           </nav>
         </div>
       </div>

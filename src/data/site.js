@@ -12,6 +12,16 @@ export const SITE = {
 };
 
 /**
+ * Where else to find the work. Order is deliberate: the two places you
+ * actually publish come before the code host.
+ */
+export const SOCIALS = [
+  { id: "youtube", label: "YouTube", href: "https://www.youtube.com/@dwarvenexcursions" },
+  { id: "twitch", label: "Twitch", href: "https://www.twitch.tv/dwarvenexcursions" },
+  { id: "github", label: "GitHub", href: `https://github.com/${SITE.githubUser}` },
+];
+
+/**
  * Where a game's live manifest lives.
  *
  * GitHub Pages serves every project repo under the account's custom

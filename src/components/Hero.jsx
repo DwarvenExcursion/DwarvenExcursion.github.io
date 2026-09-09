@@ -1,4 +1,3 @@
-import Column from "./Column";
 import { RuneDivider } from "./GoldInlay";
 import { SITE } from "../data/site";
 import "../sections/sections.css";
@@ -6,9 +5,6 @@ import "../sections/sections.css";
 export default function Hero() {
   return (
     <section className="hero" id="top">
-      <Column side="left" />
-      <Column side="right" />
-
       {/* Lamplight from above, the way a hall is lit. */}
       <div className="hero__light" aria-hidden="true" />
 

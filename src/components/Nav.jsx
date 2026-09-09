@@ -1,6 +1,7 @@
 import Mark from "./Mark";
 import { InlayMeander } from "./GoldInlay";
-import { SITE } from "../data/site";
+import SocialIcon from "./SocialIcon";
+import { SITE, SOCIALS } from "../data/site";
 import "./components.css";
 
 const LINKS = [
@@ -24,14 +25,21 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <a
-            className="btn btn--stone btn--sm"
-            href={`https://github.com/${SITE.githubUser}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
+          <span className="nav__social">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.id}
+                className="nav__icon"
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={s.label}
+                title={s.label}
+              >
+                <SocialIcon id={s.id} size={17} />
+              </a>
+            ))}
+          </span>
         </nav>
       </div>
       <InlayMeander className="nav__meander" height={8} />

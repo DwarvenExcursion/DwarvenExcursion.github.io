@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
+import Columns from "./components/Columns";
 import Footer from "./components/Footer";
 import Games from "./sections/Games";
 import Devlog from "./sections/Devlog";
@@ -16,12 +17,18 @@ export default function App() {
   return (
     <>
       <Nav />
-      <main>
-        <Hero />
-        <Games games={games} manifests={manifests} />
-        <Devlog games={games} manifests={manifests} loading={loading} />
-        <Downloads games={games} manifests={manifests} />
-      </main>
+      {/* The columns are positioned against this frame, so they run the full
+          length of the content and set their plinths down on the footer.
+          Nav stays outside it to keep its sticky behaviour unchanged. */}
+      <div className="frame">
+        <Columns />
+        <main>
+          <Hero />
+          <Games games={games} manifests={manifests} />
+          <Devlog games={games} manifests={manifests} loading={loading} />
+          <Downloads games={games} manifests={manifests} />
+        </main>
+      </div>
       <Footer />
     </>
   );

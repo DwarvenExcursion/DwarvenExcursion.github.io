@@ -3,6 +3,15 @@
    Built from stacked blocks rather than one image, so it scales
    to any height and re-themes with the CSS variables.
    ============================================================ */
+/* The columns span the whole content area, so the capital sits at the top of
+   the page and the plinth comes to rest on the footer. */
+.columns {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .column {
   position: absolute;
   top: 0;
@@ -10,15 +19,13 @@
   width: 92px;
   display: flex;
   flex-direction: column;
-  pointer-events: none;
-  z-index: 0;
 }
 .column--left { left: 0; }
 .column--right { right: 0; }
 
 /* Below the wide breakpoint there is no room for architecture. */
 @media (max-width: 1419px) {
-  .column { display: none; }
+  .columns { display: none; }
 }
 
 /* --- shared block treatment --- */
@@ -95,14 +102,17 @@
   opacity: .7;
 }
 
-/* The gold runs the full height, dead centre. */
+/* The gold runs the full height, dead centre, and travels as the page
+   scrolls. A cycle of slack above and below means the drifting band always
+   has motif to spare at both ends; the shaft clips it. */
 .column__inlay {
   position: absolute;
-  top: 26px;
+  top: -192px;
   left: 50%;
-  transform: translateX(-50%);
-  height: calc(100% - 52px);
+  height: calc(100% + 384px);
   opacity: .92;
+  transform: translate3d(-50%, var(--inlay-shift, 0px), 0);
+  will-change: transform;
 }
 
 /* ============================================================
@@ -257,7 +267,8 @@
    FOOTER
    ============================================================ */
 .footer {
-  margin-top: clamp(3rem, 7vw, 6rem);
+  /* Spacing lives on .frame instead, so the columns run all the way down
+     and set their plinths on the footer rather than floating above it. */
   padding-block: 3rem 2.5rem;
   background-color: rgba(0, 0, 0, .3);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
@@ -281,3 +292,18 @@
   border-bottom: 1px solid var(--stone-500);
 }
 .card__source:hover { color: var(--gold); border-bottom-color: var(--gold-deep); }
+
+/* --- social marks -------------------------------------------------- */
+.nav__social { display: flex; align-items: center; gap: .15rem; margin-left: .35rem; }
+.nav__icon {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  transition: color .18s ease, background-color .18s ease;
+}
+.nav__icon:hover { color: var(--gold-bright); background-color: rgba(255, 255, 255, .05); }
+
+.footer__social { display: inline-flex; align-items: center; gap: .45rem; }
+.footer__social svg { opacity: .85; }

@@ -39,30 +39,45 @@ function InlayDefs({ gradId, shadowId }) {
  * A vertical chain of stepped diamonds — the motif that runs down the
  * shaft of every column. Tiles seamlessly at any height.
  */
+/** One full cycle of the shaft motif, in pixels. Three bands, then repeat. */
+export const BAND_CYCLE = 192;
+
 export function InlayBand({ width = 26, height = 400, className = "" }) {
   const uid = useId();
   const pat = `band-${uid}`;
   const grad = `bandg-${uid}`;
   const shadow = `bands-${uid}`;
 
+  const gold = `url(#${grad})`;
+
   return (
     /* No viewBox, so the motif tiles down the shaft at its true size
-       rather than being stretched to whatever height the column is. */
+       rather than being stretched to whatever height the column is.
+       The tile is a 192px cycle of three different bands, so a reader
+       scrolling the page passes through changing inlay rather than one
+       motif repeating forever. */
     <svg className={className} width={width} height={height} aria-hidden="true">
       <InlayDefs gradId={grad} shadowId={shadow} />
-      <pattern id={pat} width="26" height="64" patternUnits="userSpaceOnUse">
-        <g filter={`url(#${shadow})`}>
-          {/* the spine */}
-          <path d="M13 0 V64" stroke={`url(#${grad})`} strokeWidth="1.5" />
-          {/* open diamond */}
-          <path
-            d="M13 8 L21 20 L13 32 L5 20 Z"
-            fill="none"
-            stroke={`url(#${grad})`}
-            strokeWidth="1.75"
-          />
-          {/* solid keystone */}
-          <path d="M13 40 L18 47 L13 54 L8 47 Z" fill={`url(#${grad})`} />
+      <pattern id={pat} width="26" height={BAND_CYCLE} patternUnits="userSpaceOnUse">
+        <g filter={`url(#${shadow})`} fill="none" stroke={gold} strokeWidth="1.75">
+          {/* the spine runs unbroken through every band */}
+          <path d={`M13 0 V${BAND_CYCLE}`} strokeWidth="1.5" />
+
+          {/* band one - the open diamond and its keystone */}
+          <path d="M13 12 L21 24 L13 36 L5 24 Z" />
+          <path d="M13 46 L18 53 L13 60 L8 53 Z" fill={gold} stroke="none" />
+
+          {/* band two - a stack of chevrons, like cut steps */}
+          <path d="M5 78 L13 86 L21 78" />
+          <path d="M5 90 L13 98 L21 90" />
+          <path d="M5 102 L13 110 L21 102" />
+          <path d="M7 118 H19" strokeWidth="1.5" />
+
+          {/* band three - a set stone between two bindings */}
+          <path d="M13 136 L20 140 L20 150 L13 154 L6 150 L6 140 Z" />
+          <path d="M6 164 H20" strokeWidth="1.5" />
+          <path d="M8 170 H18" strokeWidth="1.5" />
+          <path d="M13 178 L17 182 L13 186 L9 182 Z" fill={gold} stroke="none" />
         </g>
       </pattern>
       <rect width="26" height="100%" fill={`url(#${pat})`} />
