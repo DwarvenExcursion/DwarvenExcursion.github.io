@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "game": "dwarven-depths",
+  "title": "Dwarven Depths",
+  "page": "https://dwarvenengineering.com/dwarven-depths",
+  "latest": {
+    "version": "0.4.2",
+    "released": "2026-09-06",
+    "mandatory": false,
+    "notes": [
+      "Cave-ins now propagate through unsupported ceilings instead of stopping at the tile you broke.",
+      "Lantern oil drains at half rate while standing still.",
+      "Fixed the audio crackle on the Anbernic build at low battery."
+    ],
+    "builds": {
+      "windows": {
+        "url": "https://github.com/DwarvenExcursion/dwarven-depths/releases/download/v0.4.2/DwarvenDepths-0.4.2-setup.exe",
+        "size": 48211968,
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "installerArgs": "/SILENT /NORESTART /CLOSEAPPLICATIONS"
+      },
+      "linux-arm64": {
+        "url": "https://github.com/DwarvenExcursion/dwarven-depths/releases/download/v0.4.2/DwarvenDepths-0.4.2-arm64.zip",
+        "size": 44105728,
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  },
+  "history": [
+    {
+      "version": "0.4.1",
+      "released": "2026-08-24",
+      "notes": [
+        "Gem values rebalanced — deep amethyst was paying out more than it was worth to reach.",
+        "Added a hold-to-confirm on the abandon-run prompt."
+      ]
+    },
+    {
+      "version": "0.4.0",
+      "released": "2026-08-11",
+      "notes": [
+        "Support beams: place them to hold a ceiling for a limited number of digs.",
+        "New biome below 400m.",
+        "Save format changed; 0.3.x runs will not carry over."
+      ]
+    }
+  ]
+}

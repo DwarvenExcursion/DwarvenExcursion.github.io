@@ -1,0 +1,167 @@
+name: Release
+
+# Copy this into the GAME repo at .github/workflows/release.yml
+#
+# Shipping a release is then: bump the version in project.godot, write
+# NOTES.md, and push a tag.
+#
+#     git tag v0.4.2 && git push origin v0.4.2
+#
+# Everything below happens on its own: exports, installer, checksums,
+# GitHub Release, and the versions.json that tells every installed copy
+# of the game an update exists.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build (without the leading v)"
+        required: true
+
+env:
+  GODOT_VERSION: "4.5"
+  # Must match the export preset names in export_presets.cfg exactly.
+  WINDOWS_PRESET: "Windows Desktop"
+  LINUX_PRESET: "Linux"
+  EXE_NAME: "DwarvenDepths.exe"
+
+permissions:
+  contents: write
+
+jobs:
+  # -------------------------------------------------------------------
+  # 1. Export the game from Godot, headless.
+  # -------------------------------------------------------------------
+  export:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.5.0
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if [ -z "$VERSION" ]; then VERSION="${GITHUB_REF_NAME#v}"; fi
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building $VERSION"
+
+      - name: Install export templates
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates/
+
+      # Keep the version in project.godot as the single source of truth,
+      # but make sure it matches the tag we are building.
+      - name: Stamp version into project.godot
+        run: |
+          sed -i "s|^config/version=.*|config/version=\"${{ steps.version.outputs.value }}\"|" project.godot
+          grep 'config/version' project.godot
+
+      - name: Export
+        run: |
+          mkdir -p build/windows build/linux
+          godot --headless --export-release "$WINDOWS_PRESET" "build/windows/$EXE_NAME"
+          godot --headless --export-release "$LINUX_PRESET" "build/linux/DwarvenDepths"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exports
+          path: build/
+
+  # -------------------------------------------------------------------
+  # 2. Wrap the Windows export in the Inno Setup installer. This has to
+  #    run on Windows, which is why it is a separate job.
+  # -------------------------------------------------------------------
+  installer:
+    needs: export
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: exports
+          path: build
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+            /DAppVersion=${{ needs.export.outputs.version }} `
+            installer\dwarven-depths.iss
+        # The .iss reads from ..\..\GameExports\windows by default; point
+        # its SourceDir at build\windows in the repo copy of the script.
+
+      - name: Package the handheld build
+        shell: pwsh
+        run: |
+          Compress-Archive -Path build\linux\* `
+            -DestinationPath dist\DwarvenDepths-${{ needs.export.outputs.version }}-arm64.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # -------------------------------------------------------------------
+  # 3. Publish the release, then update the manifest the game reads.
+  #    The manifest is written LAST and committed separately, so a build
+  #    that fails halfway never announces an update whose files are not
+  #    actually downloadable yet.
+  # -------------------------------------------------------------------
+  publish:
+    needs: [export, installer]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # We commit back to this branch, so we need real history.
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v${{ needs.export.outputs.version }}" \
+            dist/* \
+            --title "v${{ needs.export.outputs.version }}" \
+            --notes-file NOTES.md \
+            --clobber || \
+          gh release upload "v${{ needs.export.outputs.version }}" dist/* --clobber
+
+      - name: Update versions.json
+        run: |
+          VERSION="${{ needs.export.outputs.version }}"
+          node scripts/update-manifest.mjs \
+            --manifest docs/versions.json \
+            --version "$VERSION" \
+            --notes NOTES.md \
+            --repo "${{ github.repository }}" \
+            --build "windows=dist/DwarvenDepths-$VERSION-setup.exe" \
+            --build "linux-arm64=dist/DwarvenDepths-$VERSION-arm64.zip"
+
+      - name: Commit the manifest
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/versions.json
+          git commit -m "Release v${{ needs.export.outputs.version }}" || exit 0
+          git push origin HEAD:${{ github.event.repository.default_branch }}

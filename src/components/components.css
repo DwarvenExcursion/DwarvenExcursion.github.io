@@ -1,0 +1,264 @@
+/* ============================================================
+   COLUMN
+   Built from stacked blocks rather than one image, so it scales
+   to any height and re-themes with the CSS variables.
+   ============================================================ */
+.column {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 92px;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  z-index: 0;
+}
+.column--left { left: 0; }
+.column--right { right: 0; }
+
+/* Below the wide breakpoint there is no room for architecture. */
+@media (max-width: 1419px) {
+  .column { display: none; }
+}
+
+/* --- shared block treatment --- */
+.column__abacus,
+.column__corbel,
+.column__necking,
+.column__plinth {
+  display: block;
+  background-color: var(--stone-600);
+  background-image: var(--grain);
+  background-blend-mode: overlay;
+  box-shadow:
+    inset 0  1px 0 rgba(255, 255, 255, .12),
+    inset 0 -2px 0 rgba(0, 0, 0, .6),
+    0 2px 6px rgba(0, 0, 0, .55);
+}
+
+/* --- capital: widest at the top, stepping in --- */
+.column__capital,
+.column__base {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+}
+.column__base { flex-direction: column; }
+
+.column__abacus { width: 92px; height: 20px; }
+.column__corbel {
+  width: 78px;
+  height: 16px;
+  background-color: var(--stone-500);
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+}
+.column__necking {
+  width: 66px;
+  height: 8px;
+  background-color: var(--stone-600);
+}
+.column__plinth { width: 92px; height: 26px; }
+
+/* the base mirrors the capital */
+.column__base .column__corbel { clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%); }
+
+/* --- shaft --- */
+.column__shaft {
+  position: relative;
+  flex: 1 1 auto;
+  width: 66px;
+  margin-inline: auto;
+  background-color: var(--stone-700);
+  background-image: var(--grain);
+  background-blend-mode: overlay;
+  box-shadow:
+    inset  2px 0 0 rgba(255, 255, 255, .07),
+    inset -2px 0 0 rgba(0, 0, 0, .5),
+    0 0 24px rgba(0, 0, 0, .6);
+  overflow: hidden;
+}
+
+/* Fluting: vertical chamfers cut into the shaft. */
+.column__flutes {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, .38) 0px,
+    rgba(0, 0, 0, .38) 1px,
+    rgba(255, 255, 255, .05) 2px,
+    transparent 3px,
+    transparent 13px,
+    rgba(0, 0, 0, .28) 14px
+  );
+  opacity: .7;
+}
+
+/* The gold runs the full height, dead centre. */
+.column__inlay {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: calc(100% - 52px);
+  opacity: .92;
+}
+
+/* ============================================================
+   STONE PANEL
+   A framed slab with inlaid corner fittings. The workhorse
+   container for cards, notices and the update dialog.
+   ============================================================ */
+.panel {
+  position: relative;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  isolation: isolate;
+}
+/* The four fittings are positioned against this box, inset from the
+   panel edge so they sit on the dressed face rather than the chamfer. */
+.panel__corners {
+  position: absolute;
+  inset: 9px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .65;
+  transition: opacity .25s ease;
+}
+.panel:hover > .panel__corners { opacity: 1; }
+.panel > *:not(.panel__corners) { position: relative; z-index: 2; }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(25, 23, 21, .82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .8), 0 8px 24px -12px rgba(0, 0, 0, .9);
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 68px;
+}
+.nav__mark {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  font-family: var(--font-carve);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.nav__mark:hover { color: var(--text); }
+.nav__mark svg { flex: 0 0 auto; }
+
+.nav__links { display: flex; align-items: center; gap: .35rem; }
+.nav__link {
+  padding: .5rem .85rem;
+  font-family: var(--font-carve);
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  transition: color .18s ease, background-color .18s ease;
+}
+.nav__link:hover { color: var(--gold-bright); background-color: rgba(255, 255, 255, .04); }
+
+@media (max-width: 720px) {
+  .nav__links { display: none; }
+}
+
+/* The meander runs along the very bottom edge of the bar. */
+.nav__meander { height: 8px; opacity: .55; }
+
+/* ============================================================
+   GAME CARD
+   ============================================================ */
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  align-items: center;
+}
+@media (max-width: 860px) {
+  .card { grid-template-columns: 1fr; }
+}
+
+.card__art {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--stone-850);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, .7),
+    inset 0 2px 12px rgba(0, 0, 0, .8);
+}
+.card__art img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Placeholder art: a lit cave mouth, drawn in CSS. Replace by
+   dropping a real screenshot into the game's `art` field. */
+.card__art--empty {
+  background-image:
+    radial-gradient(70% 90% at 50% 100%, rgba(224, 122, 53, .22) 0%, transparent 60%),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, .022) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, #201d1a, #131110);
+  display: grid;
+  place-items: center;
+}
+.card__art--empty .card__art-mark {
+  font-family: var(--font-carve);
+  font-size: .72rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.card__meta { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.card__title { margin-bottom: .6rem; }
+.card__blurb { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+.card__version {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  color: var(--text-faint);
+}
+.card__version strong { color: var(--gold); font-weight: 500; }
+
+.card__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+/* Three fittings have to sit on one rail in the card's narrower column. */
+.card__actions .btn { padding-inline: 1.1rem; letter-spacing: .1em; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  margin-top: clamp(3rem, 7vw, 6rem);
+  padding-block: 3rem 2.5rem;
+  background-color: rgba(0, 0, 0, .3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.footer__note { font-size: .82rem; color: var(--text-faint); }
+.footer__links { display: flex; gap: 1.5rem; font-size: .82rem; }

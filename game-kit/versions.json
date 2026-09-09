@@ -1,0 +1,47 @@
+{
+  "_comment": "REFERENCE COPY. Publish this at docs/versions.json in each game repo, which GitHub Pages serves at https://dwarvenengineering.com/<repo-name>/versions.json. Delete the _comment keys. After the first release, scripts/update-manifest.mjs rewrites this file for you.",
+
+  "schema": 1,
+  "game": "dwarven-depths",
+  "title": "Dwarven Depths",
+  "page": "https://dwarvenengineering.com/dwarven-depths",
+
+  "latest": {
+    "version": "0.4.2",
+    "released": "2026-09-06",
+
+    "_comment_mandatory": "Advisory only. The game tells the player the update matters; it never locks them out of playing.",
+    "mandatory": false,
+
+    "_comment_notes": "One string per bullet. These render in the game's update panel AND in the devlog on the website.",
+    "notes": [
+      "Cave-ins now propagate through unsupported ceilings.",
+      "Fixed the audio crackle on the Anbernic build at low battery."
+    ],
+
+    "_comment_builds": "Keys must match what update_checker.gd looks for: windows, linux-arm64, linux, macos. A platform with no entry gets the notice but no in-game download.",
+    "builds": {
+      "windows": {
+        "url": "https://github.com/DwarvenExcursion/dwarven-depths/releases/download/v0.4.2/DwarvenDepths-0.4.2-setup.exe",
+        "size": 48211968,
+        "_comment_sha": "Required. The game refuses to run an installer whose hash does not match.",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "installerArgs": "/SILENT /NORESTART /CLOSEAPPLICATIONS"
+      },
+      "linux-arm64": {
+        "url": "https://github.com/DwarvenExcursion/dwarven-depths/releases/download/v0.4.2/DwarvenDepths-0.4.2-arm64.zip",
+        "size": 44105728,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+
+  "_comment_history": "Previous releases, newest first. Only version/released/notes are kept — old download links are left to the GitHub Releases page.",
+  "history": [
+    {
+      "version": "0.4.1",
+      "released": "2026-08-24",
+      "notes": ["Gem values rebalanced."]
+    }
+  ]
+}

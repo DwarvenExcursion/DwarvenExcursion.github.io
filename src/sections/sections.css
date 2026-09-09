@@ -1,0 +1,175 @@
+/* ============================================================
+   HERO — the entrance hall
+   ============================================================ */
+.hero {
+  position: relative;
+  padding-block: clamp(5rem, 13vw, 10rem) clamp(4rem, 9vw, 7rem);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* A shaft of lamplight falling from somewhere above the frame. */
+.hero__light {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: min(1000px, 130vw);
+  height: 130%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background-image: radial-gradient(
+    ellipse 50% 50% at 50% 20%,
+    rgba(244, 223, 162, .11) 0%,
+    rgba(212, 169, 74, .05) 35%,
+    transparent 68%
+  );
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__title { margin-block: 1rem .5rem; }
+.hero__divider { margin-block: 1.5rem 1.75rem; }
+.hero__lede { font-size: clamp(1.05rem, 1.7vw, 1.3rem); color: var(--text); }
+.hero__sub {
+  margin-top: 1rem;
+  max-width: 58ch;
+  color: var(--text-muted);
+  font-size: .98rem;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+/* ============================================================
+   SECTION HEADINGS
+   ============================================================ */
+.section-head__rule { max-width: 260px; opacity: .6; margin-top: 1rem; }
+
+/* ============================================================
+   GAMES
+   ============================================================ */
+.games__list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* ============================================================
+   DEVLOG
+   ============================================================ */
+.devlog__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.devlog__entry {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .devlog__entry { grid-template-columns: 1fr; gap: .75rem; }
+}
+
+.devlog__stamp {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  padding-top: 1.6rem;
+  text-align: right;
+}
+@media (max-width: 700px) {
+  .devlog__stamp { flex-direction: row; align-items: baseline; gap: .75rem; padding-top: 0; text-align: left; }
+}
+.devlog__version { font-size: 1rem; color: var(--gold); }
+.devlog__date { font-size: .78rem; color: var(--text-faint); }
+
+.devlog__game {
+  font-size: 1.05rem;
+  margin-bottom: .6rem;
+  color: var(--text);
+}
+
+.devlog__notes {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--text-muted);
+  font-size: .93rem;
+}
+.devlog__notes li { margin-block: .3rem; }
+.devlog__notes li::marker { color: var(--gold-deep); }
+
+.devlog__empty { color: var(--text-faint); font-size: .92rem; }
+
+/* ============================================================
+   DOWNLOADS
+   ============================================================ */
+.downloads__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.downloads__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: .9rem;
+  margin-bottom: .5rem;
+  box-shadow: 0 1px 0 var(--stone-600);
+}
+
+.downloads__builds { list-style: none; padding: 0; margin: 0; }
+.downloads__build {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: .8rem;
+}
+.downloads__build + .downloads__build { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05); }
+
+.downloads__platform { display: block; font-size: .95rem; }
+.downloads__size { font-size: .78rem; color: var(--text-faint); }
+
+.downloads__guides {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.downloads__guide-title {
+  font-size: 1rem;
+  margin-bottom: .9rem;
+  color: var(--gold);
+}
+.downloads__steps {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--text-muted);
+  font-size: .92rem;
+}
+.downloads__steps li { margin-block: .55rem; }
+.downloads__steps li::marker { color: var(--gold-deep); font-family: var(--font-mono); }
+.downloads__steps code {
+  padding: .1rem .35rem;
+  background: var(--stone-850);
+  border-radius: 2px;
+  color: var(--gold);
+}
