@@ -32,6 +32,21 @@ export function gamePageUrl(slug) {
   return `${SITE.origin}/${slug}`;
 }
 
+/**
+ * The key art for a game, taken from the game's own Pages site.
+ *
+ * Same principle as the manifest: the game repo owns its assets, and the
+ * portfolio reads them. Replacing shot.png in the game repo updates this
+ * card too, with no commit here and no second copy to drift.
+ *
+ * Unlike the manifest this is not fetched, just pointed at — so it works
+ * in dev against the live domain, and a game whose page is not published
+ * yet simply fails to load and falls back to the placeholder.
+ */
+export function gameArtUrl(slug) {
+  return `${SITE.origin}/${slug}/shot.png`;
+}
+
 export function repoUrl(slug) {
   return `https://github.com/${SITE.githubUser}/${slug}`;
 }

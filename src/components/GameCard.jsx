@@ -1,5 +1,6 @@
+import { useState } from "react";
 import StonePanel from "./StonePanel";
-import { gamePageUrl, repoUrl } from "../data/site";
+import { gameArtUrl, gamePageUrl, repoUrl } from "../data/site";
 import "./components.css";
 
 const STATUS_LABEL = {
@@ -23,11 +24,23 @@ export default function GameCard({ game, manifest }) {
   const latest = manifest?.latest;
   const win = latest?.builds?.windows;
 
+  // Prefer art committed here, then whatever the manifest declares, then the
+  // screenshot on the game's own page. If none of them load we fall back to
+  // the carved placeholder rather than leaving a broken image in the slab.
+  const artSrc = game.art ?? manifest?.art ?? gameArtUrl(game.slug);
+  const [artFailed, setArtFailed] = useState(false);
+  const showArt = Boolean(artSrc) && !artFailed;
+
   return (
     <StonePanel as="article" className="card">
-      <div className={`card__art ${game.art ? "" : "card__art--empty"}`}>
-        {game.art ? (
-          <img src={game.art} alt={`${game.title} screenshot`} loading="lazy" />
+      <div className={`card__art ${showArt ? "" : "card__art--empty"}`}>
+        {showArt ? (
+          <img
+            src={artSrc}
+            alt={`${game.title} screenshot`}
+            loading="lazy"
+            onError={() => setArtFailed(true)}
+          />
         ) : (
           <span className="card__art-mark">Art forthcoming</span>
         )}
