@@ -180,7 +180,7 @@
 }
 
 /* The meander runs along the very bottom edge of the bar. */
-.nav__meander { height: 8px; opacity: .55; }
+.nav__meander { height: 8px; opacity: .38; }
 
 /* ============================================================
    GAME CARD
@@ -241,7 +241,7 @@
 .card__version strong { color: var(--gold); font-weight: 500; }
 
 .card__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
-/* Three fittings have to sit on one rail in the card's narrower column. */
+/* Both fittings have to sit on one rail in the card's narrower column. */
 .card__actions .btn { padding-inline: 1.1rem; letter-spacing: .1em; }
 
 /* ============================================================
@@ -262,3 +262,13 @@
 }
 .footer__note { font-size: .82rem; color: var(--text-faint); }
 .footer__links { display: flex; gap: 1.5rem; font-size: .82rem; }
+
+/* The repo link rides along with the version line rather than taking a
+   third button slot, which would wrap the row in the card column. */
+.card__source {
+  margin-left: auto;
+  font-size: .78rem;
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--stone-500);
+}
+.card__source:hover { color: var(--gold); border-bottom-color: var(--gold-deep); }

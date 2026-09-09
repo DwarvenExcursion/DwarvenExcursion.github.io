@@ -57,6 +57,14 @@ export default function GameCard({ game, manifest }) {
           ) : (
             <span>No public build yet</span>
           )}
+          <a
+            className="card__source"
+            href={repoUrl(game.slug)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            source
+          </a>
         </div>
 
         <div className="card__actions">
@@ -71,9 +79,6 @@ export default function GameCard({ game, manifest }) {
           )}
           <a className="btn btn--stone" href={gamePageUrl(game.slug)}>
             Game page
-          </a>
-          <a className="btn btn--ghost" href={repoUrl(game.slug)} target="_blank" rel="noreferrer">
-            Source
           </a>
         </div>
       </div>
